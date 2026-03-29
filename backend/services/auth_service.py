@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 
 import models
 
-# Argon2 is memory-hard and avoids bcrypt's 72-byte limit
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+# bcrypt_sha256 removes the 72-byte password cap by hashing first with SHA-256
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
 
 
 def get_password_hash(password: str) -> str:
