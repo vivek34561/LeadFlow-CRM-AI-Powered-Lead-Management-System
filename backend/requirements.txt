@@ -3,10 +3,9 @@ uvicorn==0.27.0.post1
 sqlalchemy>=2.0.36
 psycopg2-binary>=2.9.11
 
-# Pin bcrypt to avoid backend compatibility issues on some platforms
-bcrypt==4.1.2
-# Pin passlib for consistent bcrypt backend selection
-passlib[bcrypt]==1.7.4
+# Argon2 for modern password hashing (memory-hard, no 72-byte cap)
+argon2-cffi>=21.3.0
+passlib[argon2]==1.7.4
 
 pydantic>=2.7.0
 pydantic-settings>=2.2.0
