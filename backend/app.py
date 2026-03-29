@@ -44,6 +44,16 @@ print("Routers for leads, analytics, and auth have been included in the FastAPI 
 def health_check():
     return {"status": "ok", "message": "Lead Management SaaS Backend is running."}
 
+# Render and generic root health probe
+@app.get("/")
+def root():
+    return {
+        "status": "ok",
+        "message": "Lead Management SaaS Backend",
+        "docs": build_api_path(API_PREFIX, "docs"),
+        "openapi": build_api_path(API_PREFIX, "openapi.json"),
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
