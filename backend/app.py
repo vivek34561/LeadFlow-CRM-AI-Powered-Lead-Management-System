@@ -12,28 +12,32 @@ configure_logging()
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
-# Normalize API prefix to always start with a leading slash (env override safe)
-API_PREFIX = f"/{settings.API_V1_STR.strip('/')}"
+# Normalize API paths and avoid double slashes
+def build_api_path(*parts: str) -> str:
+    cleaned = [p.strip("/") for p in parts if p and p.strip("/")]
+    return "/" + "/".join(cleaned) if cleaned else ""
+
+API_PREFIX = build_api_path(settings.API_V1_STR)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    openapi_url=f"{API_PREFIX}/openapi.json"
+    openapi_url=build_api_path(API_PREFIX, "openapi.json") or "/openapi.json",
 )
 
 # CORS middleware for Frontend Dashboard
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], # In production, restrict this to frontend domains
+    allow_origins=["*"], # In production, restrict this to frontend domains
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 print("CORS middleware configured to allow requests from http://localhost:3000")
 # Include Routers
-app.include_router(leads.router, prefix=f"{API_PREFIX}/leads", tags=["leads"])
-app.include_router(analytics.router, prefix=f"{API_PREFIX}/analytics", tags=["analytics"])
-app.include_router(auth.router, prefix=f"{API_PREFIX}/auth", tags=["auth"])
+app.include_router(leads.router, prefix=build_api_path(API_PREFIX, "leads"), tags=["leads"])
+app.include_router(analytics.router, prefix=build_api_path(API_PREFIX, "analytics"), tags=["analytics"])
+app.include_router(auth.router, prefix=build_api_path(API_PREFIX, "auth"), tags=["auth"])
 print("Routers for leads, analytics, and auth have been included in the FastAPI application.")
 
 @app.get("/health")
