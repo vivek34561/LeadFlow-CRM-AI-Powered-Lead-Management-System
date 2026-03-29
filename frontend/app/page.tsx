@@ -106,7 +106,7 @@ export default function DashboardPage() {
           </div>
           <div className="card-body">
             <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <PieChart>
                   <Pie data={scoreData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value">
                     {scoreData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
@@ -126,7 +126,7 @@ export default function DashboardPage() {
           </div>
           <div className="card-body">
             <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={statusData} barCategoryGap="30%">
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -149,7 +149,7 @@ export default function DashboardPage() {
         </div>
         <div className="card-body">
           <div style={{ height: 200 }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
               <AreaChart data={dailyData}>
                 <defs>
                   <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
@@ -174,7 +174,7 @@ export default function DashboardPage() {
           <div className="card-header"><div className="card-title">Interest Areas</div></div>
           <div className="card-body">
             <div style={{ height: 220 }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={interestData} layout="vertical" barCategoryGap="25%">
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" horizontal={false} />
                   <XAxis type="number" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -191,7 +191,7 @@ export default function DashboardPage() {
           <div className="card-header"><div className="card-title">Budget Segments</div></div>
           <div className="card-body">
             <div style={{ height: 220 }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={budgetData} barCategoryGap="30%">
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />

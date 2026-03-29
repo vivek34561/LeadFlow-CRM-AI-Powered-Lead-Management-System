@@ -117,7 +117,7 @@ export default function AnalyticsPage() {
                     <div className="card-header"><div className="card-title">Intent vs Score Heatmap</div></div>
                     <div className="card-body">
                         <div style={{ height: 280 }}>
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                                 <BarChart data={intentData} barCategoryGap="20%">
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
                                     <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -137,7 +137,7 @@ export default function AnalyticsPage() {
                     <div className="card-header"><div className="card-title">Lead Sources</div></div>
                     <div className="card-body">
                         <div style={{ height: 280 }}>
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                                 <PieChart>
                                     <Pie data={sourcePieData} cx="50%" cy="50%" outerRadius={100} paddingAngle={4} dataKey="value">
                                         {sourcePieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
@@ -157,7 +157,7 @@ export default function AnalyticsPage() {
                     <div className="card-header"><div className="card-title">Interest Area × Score</div></div>
                     <div className="card-body">
                         <div style={{ height: 260 }}>
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                                 <BarChart data={interestScoreData} barCategoryGap="20%">
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
                                     <XAxis dataKey="interest" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -177,7 +177,7 @@ export default function AnalyticsPage() {
                     <div className="card-header"><div className="card-title">Timeline Distribution</div></div>
                     <div className="card-body">
                         <div style={{ height: 260 }}>
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                                 <BarChart data={timelineData} barCategoryGap="30%">
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
                                     <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -197,7 +197,7 @@ export default function AnalyticsPage() {
                     <div className="card-header"><div className="card-title">Budget × Intent Matrix</div></div>
                     <div className="card-body">
                         <div style={{ height: 260 }}>
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                                 <BarChart data={budgetIntentMatrix} barCategoryGap="25%">
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
                                     <XAxis dataKey="budget" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -218,7 +218,7 @@ export default function AnalyticsPage() {
                     <div className="card-header"><div className="card-title">Follow-up Count Distribution</div></div>
                     <div className="card-body">
                         <div style={{ height: 260 }}>
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                                 <BarChart data={followupDistData} barCategoryGap="30%">
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
                                     <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
