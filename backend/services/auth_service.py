@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 
 import models
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# bcrypt_sha256 removes the 72-byte password cap by hashing first with SHA-256
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
 
 
 def get_password_hash(password: str) -> str:
