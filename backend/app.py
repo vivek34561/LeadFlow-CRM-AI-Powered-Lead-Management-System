@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import settings
 from database import engine, Base
-from routes import leads, analytics
+from routes import leads, analytics, auth
 from utils.helpers import configure_logging
 
 # Configure basic logging
@@ -30,6 +30,7 @@ app.add_middleware(
 # Include Routers
 app.include_router(leads.router, prefix=f"{settings.API_V1_STR}/leads", tags=["leads"])
 app.include_router(analytics.router, prefix=f"{settings.API_V1_STR}/analytics", tags=["analytics"])
+app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
 
 @app.get("/health")
 def health_check():

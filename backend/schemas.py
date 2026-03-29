@@ -15,14 +15,12 @@ class LeadCreate(LeadBase):
     score: Optional[str] = "COLD" # Can be computed by AI or set by n8n
     status: Optional[str] = "NEW"
     score_explanation: Optional[str] = None
-    user_id: Optional[int] = None
 
 class LeadUpdate(BaseModel):
     status: Optional[str] = None
     followup_count: Optional[int] = None
     score: Optional[str] = None
     score_explanation: Optional[str] = None
-    user_id: Optional[int] = None
 
 class LeadResponse(LeadBase):
     id: int
@@ -47,6 +45,10 @@ class AnalyticsResponse(BaseModel):
 
 
 class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserLogin(BaseModel):
     email: EmailStr
     password: str
 

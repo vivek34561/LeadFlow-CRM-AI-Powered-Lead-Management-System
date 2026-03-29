@@ -3,14 +3,14 @@ from sqlalchemy import func
 import models
 from utils.helpers import calculate_conversion_rate
 
-def get_analytics_summary(db: Session):
-    total_leads = db.query(models.Lead).count()
-    
-    hot_leads = db.query(models.Lead).filter(models.Lead.score == "HOT").count()
-    warm_leads = db.query(models.Lead).filter(models.Lead.score == "WARM").count()
-    cold_leads = db.query(models.Lead).filter(models.Lead.score == "COLD").count()
-    
-    converted_leads = db.query(models.Lead).filter(models.Lead.status == "CONVERTED").count()
+def get_analytics_summary(db: Session, user: models.User):
+    base = db.query(models.Lead).filter(models.Lead.user_id == user.id)
+
+    total_leads = base.count()
+    hot_leads = base.filter(models.Lead.score == "HOT").count()
+    warm_leads = base.filter(models.Lead.score == "WARM").count()
+    cold_leads = base.filter(models.Lead.score == "COLD").count()
+    converted_leads = base.filter(models.Lead.status == "CONVERTED").count()
     
     conversion_rate = calculate_conversion_rate(converted_leads, total_leads)
     

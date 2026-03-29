@@ -5,6 +5,10 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
     
+    # Auth
+    SECRET_KEY: str = "change-me"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    
     # Database
     DATABASE_URL: str # Force read from .env
 
