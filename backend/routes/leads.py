@@ -6,7 +6,6 @@ from sqlalchemy.sql import func # Add this to the top of your imports
 
 import schemas
 import models
-from auth import get_current_active_user
 from database import get_db
 from services import lead_service
 import logging
