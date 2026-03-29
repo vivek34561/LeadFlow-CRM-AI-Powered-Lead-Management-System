@@ -26,11 +26,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+print("CORS middleware configured to allow requests from http://localhost:3000")
 # Include Routers
 app.include_router(leads.router, prefix=f"{settings.API_V1_STR}/leads", tags=["leads"])
 app.include_router(analytics.router, prefix=f"{settings.API_V1_STR}/analytics", tags=["analytics"])
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
+print("Routers for leads, analytics, and auth have been included in the FastAPI application.")
 
 @app.get("/health")
 def health_check():
