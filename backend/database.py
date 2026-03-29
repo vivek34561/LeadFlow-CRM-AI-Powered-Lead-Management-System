@@ -8,8 +8,13 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 def get_db():
+    print("Creating new database session")
     db = SessionLocal()
+    print("Database session created")
     try:
+        print("Yielding database session to route handler")
         yield db
+        print("Route handler completed, closing database session")
     finally:
+        print("Closing database session")
         db.close()
