@@ -27,8 +27,8 @@ def create_lead(db: Session, lead: schemas.LeadCreate):
     db.refresh(db_lead)
     return db_lead
 
-def update_lead(db: Session, lead_id: int, lead_update: schemas.LeadUpdate, user: models.User):
-    db_lead = get_lead_for_user(db, lead_id, user)
+def update_lead(db: Session, lead_id: int, lead_update: schemas.LeadUpdate):
+    db_lead = get_lead(db, lead_id)
     if not db_lead:
         return None
         
