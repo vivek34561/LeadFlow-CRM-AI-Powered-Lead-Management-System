@@ -26,10 +26,11 @@ def get_user_by_id(db: Session, user_id: int) -> Optional[models.User]:
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
-def create_user(db: Session, email: str, password: str) -> models.User:
+def create_user(db: Session, email: str, password: Optional[str] = None) -> models.User:
+    hashed = get_password_hash(password) if password else None
     user = models.User(
         email=email,
-        hashed_password=get_password_hash(password),
+        hashed_password=hashed,
         created_at=datetime.utcnow(),
     )
     db.add(user)
@@ -41,6 +42,8 @@ def create_user(db: Session, email: str, password: str) -> models.User:
 def authenticate_user(db: Session, email: str, password: str) -> Optional[models.User]:
     user = get_user_by_email(db, email)
     if not user:
+        return None
+    if not user.hashed_password:
         return None
     if not verify_password(password, user.hashed_password):
         return None

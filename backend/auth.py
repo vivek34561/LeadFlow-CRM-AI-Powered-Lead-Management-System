@@ -1,48 +1,75 @@
-from datetime import datetime, timedelta
-from typing import Optional
+import logging
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token
 from sqlalchemy.orm import Session
 
 from config import settings
 from database import get_db
 from services import auth_service
-import schemas
 
-ALGORITHM = "HS256"
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
+http_bearer = HTTPBearer(auto_error=False)
+logger = logging.getLogger(__name__)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
+def verify_google_token(token: str) -> dict:
+    """Validate a Google ID token and ensure it targets our client."""
+    try:
+        claims = id_token.verify_oauth2_token(
+            token,
+            google_requests.Request(),
+            settings.GOOGLE_CLIENT_ID,
+            clock_skew_in_seconds=60,
+        )
+    except Exception as exc:
+        logger.exception("Google token verification failed")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid Google token: {type(exc).__name__}",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    if claims.get("aud") != settings.GOOGLE_CLIENT_ID:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token not meant for this application",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    if claims.get("iss") not in {"accounts.google.com", "https://accounts.google.com"}:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token issuer",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return claims
 
 
 def get_current_user(
     db: Session = Depends(get_db),
-    token: str = Depends(oauth2_scheme),
+    credentials: HTTPAuthorizationCredentials = Depends(http_bearer),
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-    except JWTError:
+
+    if not credentials:
+        raise credentials_exception
+
+    claims = verify_google_token(credentials.credentials)
+    email: str | None = claims.get("email")
+    if email is None:
         raise credentials_exception
 
     user = auth_service.get_user_by_email(db, email)
     if user is None:
-        raise credentials_exception
+        # First-time login via Google creates a user record
+        user = auth_service.create_user(db, email=email, password=None)
     return user
 
 

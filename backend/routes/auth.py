@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 import schemas
-from auth import create_access_token
+from auth import verify_google_token
 from database import get_db
 from services import auth_service
 
@@ -22,13 +22,16 @@ def signup(payload: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=schemas.Token)
-def login(payload: schemas.UserLogin, db: Session = Depends(get_db)):
-    user = auth_service.authenticate_user(db, payload.email, payload.password)
+def login(payload: schemas.GoogleLogin, db: Session = Depends(get_db)):
+    if not payload.id_token:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Missing Google ID token")
+    claims = verify_google_token(payload.id_token)
+    email = claims.get("email")
+    if not email:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Google token missing email")
+
+    user = auth_service.get_user_by_email(db, email)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    token = create_access_token({"sub": user.email, "role": user.role})
-    return {"access_token": token, "token_type": "bearer"}
+        user = auth_service.create_user(db, email=email, password=None)
+
+    return {"access_token": payload.id_token, "token_type": "google"}
