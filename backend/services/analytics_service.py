@@ -1,10 +1,9 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 import models
 from utils.helpers import calculate_conversion_rate
 
-def get_analytics_summary(db: Session, user: models.User):
-    base = db.query(models.Lead).filter(models.Lead.user_id == user.id)
+def get_analytics_summary(db: Session):
+    base = db.query(models.Lead)
 
     total_leads = base.count()
     hot_leads = base.filter(models.Lead.score == "HOT").count()

@@ -1,29 +1,24 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from datetime import date, datetime
+from datetime import date
 from sqlalchemy.sql import func # Add this to the top of your imports
 
 import schemas
-import models
-from auth import get_current_active_user
 from database import get_db
 from services import lead_service
-import logging
 
 router = APIRouter()
-logger = logging.getLogger(__name__)
 
 @router.post("/", response_model=schemas.LeadResponse, status_code=201)
 def create_lead(
     lead: schemas.LeadCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_active_user),
 ):
-    db_lead = lead_service.get_lead_by_email(db, email=lead.email, user=current_user)
+    db_lead = lead_service.get_lead_by_email(db, email=lead.email)
     if db_lead:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return lead_service.create_lead(db=db, lead=lead, user=current_user)
+    return lead_service.create_lead(db=db, lead=lead)
 
 @router.get("/", response_model=List[schemas.LeadResponse])
 def read_leads(
@@ -32,25 +27,22 @@ def read_leads(
     score: Optional[str] = None,
     date_from: Optional[date] = None,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_active_user),
 ):
-    leads = lead_service.get_leads(db, current_user, skip=skip, limit=limit, score=score, date_from=date_from)
+    leads = lead_service.get_leads(db, skip=skip, limit=limit, score=score, date_from=date_from)
     return leads
 
 @router.get("/pending-followups", response_model=List[schemas.LeadResponse])
 def get_pending_followups(
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_active_user),
 ):
-    return lead_service.get_pending_followups(db, current_user)
+    return lead_service.get_pending_followups(db)
 
 @router.get("/{lead_id}", response_model=schemas.LeadResponse)
 def read_lead(
     lead_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_active_user),
 ):
-    db_lead = lead_service.get_lead(db, lead_id=lead_id, user=current_user)
+    db_lead = lead_service.get_lead(db, lead_id=lead_id)
     if db_lead is None:
         raise HTTPException(status_code=404, detail="Lead not found")
     return db_lead
@@ -60,9 +52,8 @@ def update_lead(
     lead_id: int,
     lead: schemas.LeadUpdate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_active_user),
 ):
-    db_lead = lead_service.update_lead(db, lead_id=lead_id, lead_update=lead, user=current_user)
+    db_lead = lead_service.update_lead(db, lead_id=lead_id, lead_update=lead)
     if db_lead is None:
         raise HTTPException(status_code=404, detail="Lead not found")
     return db_lead
@@ -75,9 +66,8 @@ def update_lead(
 def increment_followup(
     lead_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_active_user),
 ):
-    db_lead = lead_service.get_lead(db, lead_id=lead_id, user=current_user)
+    db_lead = lead_service.get_lead(db, lead_id=lead_id)
     if db_lead is None:
         raise HTTPException(status_code=404, detail="Lead not found")
     
