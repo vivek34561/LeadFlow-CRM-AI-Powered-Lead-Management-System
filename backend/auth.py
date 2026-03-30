@@ -2,8 +2,12 @@ import logging
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from google.auth.transport import requests as google_requests
-from google.oauth2 import id_token
+try:
+    from google.auth.transport import requests as google_requests
+    from google.oauth2 import id_token
+except ModuleNotFoundError:
+    google_requests = None
+    id_token = None
 from sqlalchemy.orm import Session
 
 from config import settings
@@ -16,6 +20,11 @@ logger = logging.getLogger(__name__)
 
 def verify_google_token(token: str) -> dict:
     """Validate a Google ID token and ensure it targets our client."""
+    if google_requests is None or id_token is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Google auth dependencies are missing. Install google-auth.",
+        )
     try:
         claims = id_token.verify_oauth2_token(
             token,
