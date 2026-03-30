@@ -23,7 +23,8 @@
 
 ---
 ## 📸 Screenshots
-
+![Dashboard](frontend/asserts/dashboard.jpg)
+![n8n_workflow](frontend/asserts/n8n_workflow.jpg)
 
 ## Overview
 
