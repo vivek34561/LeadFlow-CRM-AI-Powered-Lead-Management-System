@@ -23,10 +23,10 @@
 
 ---
 ## 📸 Screenshots
+![n8n_workflow](frontend/asserts/n8n_workflow.jpg)
 ![Dashboard](frontend/asserts/dashboard.jpg)
 ![Dashboard](frontend/asserts/dashboard1.jpg)
 ![Dashboard](frontend/asserts/dashboard2.jpg)
-![n8n_workflow](frontend/asserts/n8n_workflow.jpg)
 
 ## Overview
 
