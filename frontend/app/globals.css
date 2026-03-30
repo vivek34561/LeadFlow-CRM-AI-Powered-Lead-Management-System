@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@300;400;500;600;700;800&display=swap');
 
 /* ─── Design Tokens ─── */
 :root {
-  --bg-primary: #070b14;
-  --bg-secondary: #0d1526;
-  --bg-card: rgba(17, 25, 45, 0.85);
-  --bg-card-hover: rgba(22, 33, 60, 0.92);
-  --border: rgba(99, 102, 241, 0.18);
-  --border-hover: rgba(99, 102, 241, 0.4);
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --border: #e2e8f0;
+  --border-hover: #cbd5e1;
 
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --accent-glow: rgba(99, 102, 241, 0.25);
+  --accent: #e11d48;
+  --accent-light: #fb7185;
+  --accent-glow: rgba(225, 29, 72, 0.15);
 
   --hot: #ef4444;
   --hot-bg: rgba(239, 68, 68, 0.12);
@@ -20,23 +20,23 @@
   --cold: #3b82f6;
   --cold-bg: rgba(59, 130, 246, 0.12);
 
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #475569;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
 
   --status-new: #22c55e;
   --status-contacted: #f59e0b;
-  --status-converted: #6366f1;
+  --status-converted: #e11d48;
   --status-closed: #ef4444;
   --status-following: #f59e0b;
-  --status-bought: #6366f1;
+  --status-bought: #e11d48;
   --status-expired: #ef4444;
 
   --sidebar-width: 250px;
   --radius: 14px;
   --radius-sm: 8px;
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-hover: 0 8px 40px rgba(99, 102, 241, 0.2);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* ─── Reset ─── */
@@ -51,7 +51,7 @@
 html,
 body {
   height: 100%;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Roboto Serif', serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -130,7 +130,7 @@ a {
 .sidebar-logo-icon {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  background: linear-gradient(135deg, var(--accent), #be123c);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -190,8 +190,8 @@ a {
 }
 
 .sidebar-link.active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));
-  color: var(--accent-light);
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.15), rgba(190, 18, 60, 0.05));
+  color: var(--accent);
   border-color: var(--border-hover);
 }
 
@@ -242,7 +242,7 @@ a {
   align-items: center;
   padding: 0 32px;
   gap: 16px;
-  background: rgba(7, 11, 20, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -354,7 +354,7 @@ a {
 }
 
 .kpi-card.total::before {
-  background: linear-gradient(90deg, var(--accent), #8b5cf6);
+  background: linear-gradient(90deg, var(--accent), #be123c);
 }
 
 .kpi-card.hot::before {
@@ -460,8 +460,8 @@ a {
 
 .badge-converted,
 .badge-bought {
-  background: rgba(99, 102, 241, 0.12);
-  color: var(--accent-light);
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--accent);
   border: 1px solid var(--border);
 }
 
@@ -513,13 +513,13 @@ a {
 }
 
 .data-table tbody tr {
-  border-bottom: 1px solid rgba(99, 102, 241, 0.07);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   transition: background 0.15s;
   cursor: pointer;
 }
 
 .data-table tbody tr:hover {
-  background: rgba(99, 102, 241, 0.06);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .data-table td {

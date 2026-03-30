@@ -12,9 +12,10 @@ import {
 import { Users, Flame, Thermometer, Snowflake, TrendingUp, ChevronRight, AlertCircle } from 'lucide-react';
 
 const SCORE_COLORS = { HOT: '#ef4444', WARM: '#f59e0b', COLD: '#3b82f6' };
+const CHART_COLORS = ['#e11d48', '#f59e0b', '#3b82f6', '#10b981', '#f97316', '#0ea5e9', '#ec4899'];
 const STATUS_COLORS: Record<string, string> = {
-  New: '#22c55e', Following: '#f59e0b', Bought: '#6366f1', Expired: '#ef4444',
-  NEW: '#22c55e', CONTACTED: '#f59e0b', CONVERTED: '#6366f1', CLOSED: '#ef4444',
+  New: '#22c55e', Following: '#f59e0b', Bought: '#e11d48', Expired: '#ef4444',
+  NEW: '#22c55e', CONTACTED: '#f59e0b', CONVERTED: '#e11d48', CLOSED: '#ef4444',
 };
 
 function StatCard({ label, value, icon, colorClass, suffix = '' }: {
@@ -24,7 +25,7 @@ function StatCard({ label, value, icon, colorClass, suffix = '' }: {
   return (
     <div className={`kpi-card ${colorClass}`}>
       <div className="kpi-top">
-        <div className="kpi-icon" style={{ background: 'rgba(255,255,255,0.06)' }}>{icon}</div>
+        <div className="kpi-icon" style={{ background: 'rgba(0,0,0,0.04)' }}>{icon}</div>
       </div>
       <div className="kpi-value">{value}{suffix}</div>
       <div className="kpi-label">{label}</div>
@@ -51,9 +52,11 @@ export default function DashboardPage() {
   ] : [];
 
   const statusCounts = leads.reduce((acc: Record<string, number>, l) => {
-    acc[l.status] = (acc[l.status] || 0) + 1; return acc;
-  }, {});
-  const statusData = Object.entries(statusCounts).map(([name, value]) => ({ name, value, fill: STATUS_COLORS[name] || '#6366f1' }));
+    const s = l.status ? l.status.toUpperCase() : 'NEW';
+    acc[s] = (acc[s] || 0) + 1; 
+    return acc;
+  }, { NEW: 0, CONTACTED: 0, CONVERTED: 0, CLOSED: 0 });
+  const statusData = Object.entries(statusCounts).map(([name, value]) => ({ name, value, fill: STATUS_COLORS[name] || '#e11d48' }));
 
   const interestCounts = leads.reduce((acc: Record<string, number>, l) => {
     if (l.interest) { acc[l.interest] = (acc[l.interest] || 0) + 1; } return acc;
@@ -128,10 +131,10 @@ export default function DashboardPage() {
             <div className="chart-container">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={statusData} barCategoryGap="30%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(225,29,72,0.1)" vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99,102,241,0.06)' }} />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(225,29,72,0.06)' }} />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                     {statusData.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
                   </Bar>
@@ -153,15 +156,15 @@ export default function DashboardPage() {
               <AreaChart data={dailyData}>
                 <defs>
                   <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#e11d48" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#e11d48" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(225,29,72,0.1)" vertical={false} />
                 <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'var(--accent)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} fill="url(#colorLeads)" name="Leads" />
+                <Area type="monotone" dataKey="count" stroke="#e11d48" strokeWidth={2} fill="url(#colorLeads)" name="Leads" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -176,11 +179,15 @@ export default function DashboardPage() {
             <div style={{ height: 220 }}>
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={interestData} layout="vertical" barCategoryGap="25%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" horizontal={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(225,29,72,0.1)" horizontal={false} />
                   <XAxis type="number" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis dataKey="name" type="category" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} width={110} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99,102,241,0.06)' }} />
-                  <Bar dataKey="value" fill="#6366f1" radius={[0, 6, 6, 0]} name="Leads" />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(225,29,72,0.06)' }} />
+                  <Bar dataKey="value" radius={[0, 6, 6, 0]} name="Leads">
+                    {interestData.map((entry, index) => (
+                      <Cell key={index} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -193,11 +200,15 @@ export default function DashboardPage() {
             <div style={{ height: 220 }}>
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={budgetData} barCategoryGap="30%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(225,29,72,0.1)" vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99,102,241,0.06)' }} />
-                  <Bar dataKey="value" fill="#8b5cf6" radius={[6, 6, 0, 0]} name="Leads" />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(225,29,72,0.06)' }} />
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]} name="Leads">
+                    {budgetData.map((entry, index) => (
+                      <Cell key={index} fill={CHART_COLORS[(index + 3) % CHART_COLORS.length]} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>

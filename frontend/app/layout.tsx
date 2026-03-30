@@ -4,7 +4,7 @@ import Sidebar from '@/components/Sidebar';
 import TopNav from '@/components/TopNav';
 
 export const metadata: Metadata = {
-  title: 'LeadIQ — AI Lead Management',
+  title: 'Lead Management Dashboard',
   description: 'Smart CRM dashboard powered by AI scoring and automated follow-ups',
 };
 
